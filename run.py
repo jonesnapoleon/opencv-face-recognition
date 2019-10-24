@@ -6,6 +6,10 @@ import pickle
 import random
 import os
 import matplotlib.pyplot as plt
+# import tkinter as tk
+# from tkinter import filedialog
+import math
+import itertools
 
 # Feature extractor
 def extract_features(image_path, vector_size=32):
@@ -70,9 +74,18 @@ class Matcher(object):
         v = vector.reshape(1, -1)
         return scipy.spatial.distance.cdist(self.matrix, v, 'cosine').reshape(-1)
 
+    # def euclide(self, vector):
+    #     d = 0
+    #     v = vector.reshape(1, -1)
+    #     for s,vc in zip(self, vector):
+    #         d += (s-vc)*(s-vc)
+    #     return math.sqrt(d)
+        
+
+
     def match(self, image_path, topn=5):
         features = extract_features(image_path)
-        img_distances = self.cos_cdist(features)
+        img_distances = self.cos_cdist(features) #ganti cos_cdist jadi euclide
         # getting top 5 records
         nearest_ids = np.argsort(img_distances)[:topn].tolist()
         nearest_img_paths = self.names[nearest_ids].tolist()
@@ -85,6 +98,8 @@ def show_img(path):
     plt.show()
     
 def run():
+    # r = tk.Tk()
+    # r.title('Face Matching')
     images_path = 'resources/images/'
     files = [os.path.join(images_path, p) for p in sorted(os.listdir(images_path))]
     # getting 3 random images 
