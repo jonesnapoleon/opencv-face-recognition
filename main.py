@@ -1,11 +1,24 @@
-import cv2
-import numpy as np
-from matplotlib import pyplot as plt
+import tkinter as tk
 
-img = cv2.imread('paris.jpg', cv2.IMREAD_GRAYSCALE)
-plt.imshow(img, cmap = 'gray', interpolation = 'bicubic')
-plt.xticks([]), plt.yticks([])  # to hide tick values on X and Y axis
-plt.plot([200,300,400],[100,200,300],'c', linewidth=5)
-plt.show()
+class Application(tk.Frame):
+    def __init__(self, master=None):
+        super().__init__(master)
+        self.pack()
+        self.create_widgets()
 
-cv2.imwrite('parisgray.png',img)
+    def create_widgets(self):
+        self.hi_there = tk.Button(self)
+        self.hi_there["text"] = "Hello World\n(click me)"
+        self.hi_there["command"] = self.say_hi
+        self.hi_there.pack(side="top")
+
+        self.quit = tk.Button(self, text="QUIT", fg="red",
+                              command=root.destroy)
+        self.quit.pack(side="bottom")
+
+    def say_hi(self):
+        print("hi there, everyone!")
+
+root = tk.Tk()
+app = Application(master=root)
+app.mainloop()

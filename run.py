@@ -2,20 +2,21 @@ import cv2
 import numpy as np
 import scipy
 from scipy.misc import imread
+import sys
 import pickle
+import tkinter as tk
 import random
 import os
 import matplotlib.pyplot as plt
-# import tkinter as tk
-# from tkinter import filedialog
 import math
 import itertools
+from gui import Application
 
 # Feature extractor
 def extract_features(image_path, vector_size=32):
     image = imread(image_path, mode="RGB")
     try:
-        # Using KAZE, cause SIFT, ORB and other was moved to additional module
+        # Using KAZE, cause SIFT,qqwqq ORB and other was moved to additional module
         # which is adding addtional pain during install
         alg = cv2.KAZE_create()
         # Dinding image keypoints
@@ -64,6 +65,8 @@ class Matcher(object):
         self.names = []
         self.matrix = []
         for k, v in self.data.items():
+            print(k, 'data item name')
+            print(len(v), 'data item matrix')
             self.names.append(k)
             self.matrix.append(v)
         self.matrix = np.array(self.matrix)
@@ -72,20 +75,21 @@ class Matcher(object):
     def cos_cdist(self, vector):
         # getting cosine distance between search image and images database
         v = vector.reshape(1, -1)
-        return scipy.spatial.distance.cdist(self.matrix, v, 'cosine').reshape(-1)
+        a = scipy.spatial.distance.cdist(self.matrix, v, 'cosine').reshape(-1)
+        return a
 
-    # def euclide(self, vector):
-    #     d = 0
-    #     v = vector.reshape(1, -1)
-    #     for s,vc in zip(self, vector):
-    #         d += (s-vc)*(s-vc)
-    #     return math.sqrt(d)
+    def euclide(self, vector):
+        d = 0
+        v = vector.reshape(1, -1)
+        print(v)
+        for s,vc in zip(self, vector):
+            d += (s-vc)*(s-vc)
+        return math.sqrt(d)
         
-
-
     def match(self, image_path, topn=5):
         features = extract_features(image_path)
         img_distances = self.cos_cdist(features) #ganti cos_cdist jadi euclide
+        print(len(features))
         # getting top 5 records
         nearest_ids = np.argsort(img_distances)[:topn].tolist()
         nearest_img_paths = self.names[nearest_ids].tolist()
@@ -96,29 +100,28 @@ def show_img(path):
     img = imread(path, mode="RGB")
     plt.imshow(img)
     plt.show()
-    
+
 def run():
-    # r = tk.Tk()
-    # r.title('Face Matching')
     images_path = 'resources/images/'
     files = [os.path.join(images_path, p) for p in sorted(os.listdir(images_path))]
-    # getting 3 random images 
+    # getting 3 random images
     sample = random.sample(files, 3)
-    
     batch_extractor(images_path)
-
-    ma = Matcher('features.pck')
+    ma = Matcher()
     
     for s in sample:
-        print('Query image ==========================================')
-        show_img(s)
+        # print('Query image ==========================================')
+        # self.show_img(s)
         names, match = ma.match(s, topn=3)
         print('Result images ========================================')
         for i in range(3):
             # we got cosine distance, less cosine distance between vectors
             # more they similar, thus we subtruct it from 1 to get match value
-            print('Match %s' % (1-match[i]))
-            show_img(os.path.join(images_path, names[i]))
+            print('Match: %s' % (1-match[i]))
+            # show_img(os.path.join(images_path, names[i]))
 
-
+# root = tk.Tk()
+# root.geometry("1000x800")
+# app = Application(master=root)
+# app.mainloop()
 run()
