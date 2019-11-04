@@ -10,7 +10,7 @@ import os
 import matplotlib.pyplot as plt
 import math
 import itertools
-from gui import Application
+import gui
 
 # Feature extractor
 def extract_features(image_path, vector_size=32):
@@ -81,7 +81,7 @@ class Matcher(object):
     def euclide(self, vector):
         d = 0
         v = vector.reshape(1, -1)
-        print(v)
+        print(v, 'vector matrix')
         for s,vc in zip(self, vector):
             d += (s-vc)*(s-vc)
         return math.sqrt(d)
@@ -120,8 +120,8 @@ def run():
             print('Match: %s' % (1-match[i]))
             # show_img(os.path.join(images_path, names[i]))
 
-# root = tk.Tk()
-# root.geometry("1000x800")
-# app = Application(master=root)
-# app.mainloop()
+root = tk.Tk()
+root.geometry("1000x800")
+app = gui.Application(master=root)
+app.mainloop()
 run()
