@@ -26,12 +26,11 @@ class PhotoCtrl(wx.App):
         self.frame = wx.Frame(None, title='Feature extractor image', style=wx.DEFAULT_FRAME_STYLE, size=(800, 1000))
         self.panel = wx.Panel(self.frame)
         pub.subscribe(self.update_image_on_dnd, 'dnd')
- 
         self.createWidgets()
         self.frame.Show()
  
     def createWidgets(self):
-        instructions = 'Drag and Drop an image of your choice'
+        instructions = 'Drag and Drop an image of your choice.'
         img = wx.Image(PhotoMaxSize, PhotoMaxSize)
         self.imageCtrl = wx.StaticBitmap(self.panel, wx.ID_ANY, 
                                          wx.Bitmap(img))
@@ -39,41 +38,69 @@ class PhotoCtrl(wx.App):
         self.imageCtrl.SetDropTarget(filedroptarget)
 #  
         instructLbl = wx.StaticText(self.panel, label=instructions)
+        instructagain = wx.StaticText(self.panel, label='Select an image before clicking these buttons')
+        instructagain1 = wx.StaticText(self.panel, label='These buttons will automatically show you five similar results.')
         cosinusBtn = wx.Button(self.panel, label='Cosinus')
         cosinusBtn.Bind(wx.EVT_BUTTON, self.on_cosinus)
         euclideanBtn = wx.Button(self.panel, label='Euclidean')
         euclideanBtn.Bind(wx.EVT_BUTTON, self.on_euclidean)
-
-
  
         self.mainSizer = wx.BoxSizer(wx.VERTICAL)
         self.sizer = wx.BoxSizer(wx.HORIZONTAL)
  
-        # self.mainSizer.Add(wx.StaticLine(self.panel, wx.ID_ANY),
-        #                    0, wx.ALL|wx.EXPAND, 5)
-        self.mainSizer.Add(instructLbl, 0, wx.ALL, 15)
-        self.mainSizer.Add(self.imageCtrl, 0, wx.ALL, 15)
-        self.sizer.Add(euclideanBtn, 0, wx.ALL, 10)
-        self.sizer.Add(cosinusBtn, 0, wx.ALL, 10)
-        self.mainSizer.Add(self.sizer, 0, wx.ALL, 15)
- 
+        self.mainSizer.Add(instructLbl, 0, wx.ALL, 10)
+        self.mainSizer.Add(self.imageCtrl, 0, wx.ALL, 10)
+        self.mainSizer.Add(instructagain, 0, wx.ALL, 5)
+        self.mainSizer.Add(instructagain1, 0, wx.ALL, 5)
+        self.mainSizer.Add(wx.StaticLine(self.panel, wx.ID_ANY), 0, wx.ALL|wx.EXPAND, 0)
+        self.sizer.Add(euclideanBtn, 0, wx.ALL, 5)
+        self.sizer.Add(cosinusBtn, 0, wx.ALL, 5)
+        self.mainSizer.Add(self.sizer, 0, wx.ALL, 5)
+
         self.panel.SetSizer(self.mainSizer)
         self.mainSizer.Fit(self.frame)
- 
         self.panel.Layout()
  
     def on_euclidean(self, event):
-        # img = wx.Image(PhotoMaxSize* 3/4, PhotoMaxSize * 3/4)
-        # self.images = wx.StaticBitmap(self.panel, wx.ID_ANY, 
-        #                                  wx.Bitmap(img))
         self.panel.SetBackgroundColour('Red')
+        img = wx.Image(PhotoMaxSize* 3/4, PhotoMaxSize * 3/4)
+ 
         # self.mainSizer = wx.BoxSizer(wx.VERTICAL)
-        # self.mainSizer.Add(self.imageCtrl, 90, wx.ALL, 15)
+        # self.sizer = wx.BoxSizer(wx.HORIZONTAL)
+
+        images = [0, 0, 0, 0, 0]
+        for i in range(5):
+            images[i] = wx.StaticBitmap(self.panel, 0, wx.Bitmap(img), (i * 225, 400))
+
+        self.mainSizer.Add(wx.StaticLine(self.panel, wx.ID_ANY), 0, wx.ALL|wx.EXPAND, 0)
+
+        for i in range(5):
+            self.sizer.Add(images[i], 0, wx.EXPAND, 5)
+
+        self.mainSizer.Add(self.sizer, 0, wx.ALL, 5)
+
+        self.panel.SetSizer(self.mainSizer)
+        self.mainSizer.Fit(self.frame)
+        self.panel.Layout()
         self.panel.Refresh()
-        # self.on_view()
 
     def on_cosinus(self, event):
         self.panel.SetBackgroundColour('Green')
+        img = wx.Image(PhotoMaxSize* 3/4, PhotoMaxSize * 3/4)
+
+        images = [0, 0, 0, 0, 0]
+        for i in range(5):
+            images[i] = wx.StaticBitmap(self.panel, 0, wx.Bitmap(img), (i * 225, 400))
+            
+        self.mainSizer.Add(wx.StaticLine(self.panel, wx.ID_ANY), 0, wx.EXPAND)
+
+        for i in range(5):
+            self.sizer.Add(images[i], 0, wx.EXPAND, 5)
+
+        self.mainSizer.Add(self.sizer)
+        self.panel.SetSizer(self.mainSizer)
+        self.mainSizer.Fit(self.frame)
+        self.panel.Layout()
         self.panel.Refresh()
  
     def update_image_on_dnd(self, filepath):
