@@ -62,11 +62,10 @@ class PhotoCtrl(wx.App):
         self.panel.Layout()
  
     def on_euclidean(self, event):
+        event.GetEventObject().Disable()
         self.panel.SetBackgroundColour('Red')
         img = wx.Image(PhotoMaxSize* 3/4, PhotoMaxSize * 3/4)
- 
-        # self.mainSizer = wx.BoxSizer(wx.VERTICAL)
-        # self.sizer = wx.BoxSizer(wx.HORIZONTAL)
+        self.sizer1 = wx.BoxSizer(wx.HORIZONTAL)
 
         images = [0, 0, 0, 0, 0]
         for i in range(5):
@@ -75,34 +74,39 @@ class PhotoCtrl(wx.App):
         self.mainSizer.Add(wx.StaticLine(self.panel, wx.ID_ANY), 0, wx.ALL|wx.EXPAND, 0)
 
         for i in range(5):
-            self.sizer.Add(images[i], 0, wx.EXPAND, 5)
+            self.sizer1.Add(images[i], 0, wx.EXPAND, 15)
 
-        self.mainSizer.Add(self.sizer, 0, wx.ALL, 5)
+        self.mainSizer.Add(self.sizer1, 0, wx.ALL, 5)
 
         self.panel.SetSizer(self.mainSizer)
         self.mainSizer.Fit(self.frame)
         self.panel.Layout()
         self.panel.Refresh()
 
+
     def on_cosinus(self, event):
+        event.GetEventObject().Disable()
         self.panel.SetBackgroundColour('Green')
         img = wx.Image(PhotoMaxSize* 3/4, PhotoMaxSize * 3/4)
+        self.sizer1 = wx.BoxSizer(wx.HORIZONTAL)
 
         images = [0, 0, 0, 0, 0]
         for i in range(5):
             images[i] = wx.StaticBitmap(self.panel, 0, wx.Bitmap(img), (i * 225, 400))
-            
-        self.mainSizer.Add(wx.StaticLine(self.panel, wx.ID_ANY), 0, wx.EXPAND)
+
+        self.mainSizer.Add(wx.StaticLine(self.panel, wx.ID_ANY), 0, wx.ALL|wx.EXPAND, 0)
 
         for i in range(5):
-            self.sizer.Add(images[i], 0, wx.EXPAND, 5)
+            self.sizer1.Add(images[i], 0, wx.EXPAND, 15)
 
-        self.mainSizer.Add(self.sizer)
+        self.mainSizer.Add(self.sizer1, 0, wx.ALL, 5)
+
         self.panel.SetSizer(self.mainSizer)
         self.mainSizer.Fit(self.frame)
         self.panel.Layout()
         self.panel.Refresh()
- 
+
+
     def update_image_on_dnd(self, filepath):
         self.on_view(filepath=filepath)
  
