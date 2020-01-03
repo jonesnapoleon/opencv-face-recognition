@@ -1,6 +1,7 @@
 ﻿# opencv-face-recognition
+# Linear and Geometry Algebra Informatics ITB 2019
 
-install opencv, numpy, matplotlib
+## Prerequisite: Python, OpenCV, Numpy, Matplotlib, WX
 ==================================
 pip install opencv-python
 
@@ -9,4 +10,4 @@ pip install numpy
 pip install matplotlib
 
 
-Linear and Geometry Algebra Informatics ITB 2019
+
